@@ -1,4 +1,99 @@
-<h1>Mini Model Lab AI</h1>
-<p>Create thermocol miniature video prompts.</p>
-<input id="object" placeholder="Enter object name">
-<button onclick="alert('Your app is ready to build!')">Generate</button>
+Mini Model Lab AI V2 — HTML Code
+Copy all the code below, then paste it into index.html on GitHub.
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101827">
+<title>Mini Model Lab AI</title>
+<style>
+:root{--bg:#0b1220;--card:#151f30;--line:#2b3a50;--text:#f4f7fb;--muted:#aab8ca;--green:#45d6a8}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#0b1220,#101a2b);color:var(--text);font:16px/1.6 system-ui,sans-serif}
+main{max-width:760px;margin:auto;padding:14px}.hero,.card{border:1px solid var(--line);border-radius:18px;background:var(--card);padding:17px;margin:12px 0}
+.hero{background:linear-gradient(135deg,#18283a,#112033)}h1{font-size:25px;margin:8px 0}.tag{display:inline-block;background:var(--green);color:#06251c;border-radius:20px;padding:2px 10px;font-size:12px;font-weight:800}
+p,.hint{color:var(--muted)}label{display:block;margin:10px 0 4px;font-weight:700}
+input,select{width:100%;padding:12px;border:1px solid #3b4b61;border-radius:10px;background:#0d1726;color:white;font:inherit}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{width:100%;padding:13px;border:0;border-radius:11px;margin-top:13px;font:inherit;font-weight:800;cursor:pointer}
+.primary{background:var(--green);color:#06251c}.secondary{background:#24344a;color:white;border:1px solid #3a4c64}
+.output{white-space:pre-wrap;overflow-wrap:anywhere;background:#0b1422;border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:8px}
+.item{border-top:1px solid var(--line);padding:12px 0}.ltr{direction:ltr;text-align:left}.status{color:var(--green);min-height:24px}
+@media(max-width:480px){.grid{grid-template-columns:1fr}h1{font-size:22px}}
+</style></head>
+<body><main>
+<header class="hero"><span class="tag">MINI MODEL LAB</span><h1>🧱 Mini Model Lab AI</h1>
+<p>Create complete YouTube video prompts for miniature objects made only from white thermocol foam. English prompts and process-only English voiceover. Every scene is 10 seconds.</p></header>
+<section class="card"><h2>Create a video plan</h2>
+<label for="object">Object to create</label><input id="object" value="mini modern house" placeholder="e.g. mosque, car, bridge">
+<label for="detail">Details to include</label><input id="detail" placeholder="e.g. windows, doors, stairs">
+<div class="grid"><div><label for="count">Number of scenes</label><select id="count"><option value="3">3 scenes — 30 seconds</option><option value="4" selected>4 scenes — 40 seconds</option><option value="6">6 scenes — 60 seconds</option><option value="9">9 scenes — 90 seconds</option></select></div>
+<div><label for="style">Video style</label><select id="style"><option>Realistic DIY</option><option>Cinematic Macro</option><option>Satisfying Craft</option><option>Top-down Tutorial</option></select></div></div>
+<button class="btn primary" onclick="generate()">Generate Content Pack</button><div class="status" id="status"></div>
+<p class="hint">This is a prompt generator. It does not generate actual videos or connect to an external AI service.</p></section>
+<div id="results" hidden><section class="card"><h2>Video Idea</h2><div id="idea" class="output"></div></section>
+<section class="card"><h2>Scene Prompts</h2><div id="scenes"></div><button class="btn secondary" onclick="copyText('scenes')">Copy All Scenes</button></section>
+<section class="card"><h2>English Voiceover — Creation Process Only</h2><div id="voice" class="output"></div><button class="btn secondary" onclick="copyText('voice')">Copy Voiceover</button></section>
+<section class="card"><h2>YouTube Title</h2><div id="title" class="output"></div><button class="btn secondary" onclick="copyText('title')">Copy Title</button><h2>Description</h2><div id="description" class="output"></div><button class="btn secondary" onclick="copyText('description')">Copy Description</button><h2>Hashtags</h2><div id="hashtags" class="output"></div><button class="btn secondary" onclick="copyText('hashtags')">Copy Hashtags</button><h2>YouTube Tags</h2><div id="tags" class="output"></div><button class="btn secondary" onclick="copyText('tags')">Copy Tags</button><h2>Auto-Made Thumbnail</h2><p class="hint">This creates a downloadable designed thumbnail in your browser. It is not an AI-photorealistic image.</p><div id="thumbnailPreview" style="margin-top:10px"></div><button class="btn primary" onclick="downloadThumbnail()">Download Thumbnail PNG</button><h2>Thumbnail Prompt</h2><div id="thumb" class="output"></div><button class="btn secondary" onclick="copyText('package')">Copy Full Package</button><div id="package" hidden></div></section></div>
+</main>
+<script>
+function generate(){
+const obj=document.getElementById('object').value.trim()||'mini house',detail=document.getElementById('detail').value.trim()||'clean edges and fine details',n=+document.getElementById('count').value,style=document.getElementById('style').value;
+const stages=[
+'Show a plain white thermocol foam block on a clean craft table. Briefly show the intended '+obj+' design.',
+'Measure and mark the white thermocol foam for the same '+obj+'. Show clear ruler measurements and pencil guide lines.',
+'Carefully cut the marked white thermocol foam pieces with controlled craft-tool movements. Keep every edge neat.',
+'Arrange and join the cut white thermocol foam pieces to form the main structure of the same '+obj+'.',
+'Add '+detail+' using only small pieces of white thermocol foam. Keep the model design and scale unchanged.',
+'Refine the edges of the same white foam '+obj+' and remove loose foam crumbs from the table.',
+'Reveal the completed '+obj+', made entirely from white thermocol foam. Show front, side and close-up views.',
+'Capture macro close-ups of the completed white foam '+obj+', showing texture, edges and handmade details.',
+'Place the finished white thermocol foam '+obj+' at the center of the table and show the complete miniature clearly.'
+];
+const names=['Prepare the foam','Measure and mark','Cut the pieces','Assemble the structure','Add details','Refine the model','Reveal the result','Detail close-ups','Final view'];
+const narration=[
+'Place the white thermocol foam block on the work surface and prepare the pieces for the model.',
+'Measure the foam carefully and mark the outline of each required part.',
+'Cut along the marked lines to create accurate foam pieces.',
+'Arrange and join the foam pieces to build the main structure.',
+'Shape and attach the small details using white thermocol foam.',
+'Refine the edges and remove loose foam crumbs from the work surface.',
+'Show the completed white thermocol foam model from several angles.',
+'Show close-up views of the edges and handcrafted foam details.',
+'Present the finished miniature clearly on the work surface.'
+];
+let sceneText=[],voiceText=[];
+for(let i=0;i<n;i++){
+sceneText.push({name:names[i],text:'SCENE '+(i+1)+' — EXACTLY 10 SECONDS\\n'+stages[i]+'\\nVisual style: '+style+'. Vertical 9:16 realistic video. CONTINUITY LOCK: use the same object design, same hands, same table, same lighting and same scale as the previous scene. The object must be made ONLY from white thermocol foam. No paint, no colored parts, no text, no captions, no logo, no watermark.'});
+voiceText.push(narration[i]);
+}
+const title='How to Make a '+obj+' from White Thermocol Foam | Mini Model Lab';
+const hashtags='#ThermocolCraft #ThermocolArt #Miniature #DIY #FoamCraft #MiniModelLab #Handmade #CraftIdeas #YouTubeShorts';
+const tags='thermocol craft, thermocol foam model, miniature making, DIY miniature, white foam craft, '+obj+', handmade model, foam cutting, craft ideas, satisfying craft, mini model lab, YouTube Shorts';
+const desc='Watch the step-by-step miniature craft process for making a '+obj+' using only white thermocol foam. This process covers measuring, cutting, assembling, detailing and finishing the model.\\n\\n'+hashtags;
+const thumb='Create a realistic vertical 9:16 thumbnail showing a finely handcrafted '+obj+' made entirely from white thermocol foam on a clean craft table. Crisp foam texture, detailed miniature, close-up composition and natural cinematic lighting. No paint, no colored parts, no text, no logo, no watermark.';
+document.getElementById('idea').textContent='Create a '+obj+' from a plain white thermocol foam block, showing the complete construction process. Extra details: '+detail+'. Visual style: '+style+'. Total duration: '+(n*10)+' seconds.';
+document.getElementById('scenes').innerHTML='';
+sceneText.forEach((s,i)=>{const box=document.createElement('div');box.className='item';const h=document.createElement('h3');h.textContent='Scene '+(i+1)+' — 10 seconds — '+s.name;const p=document.createElement('div');p.className='output';p.textContent=s.text.replace('\\\\n','\\n');box.append(h,p);document.getElementById('scenes').append(box);});
+document.getElementById('voice').textContent=voiceText.join(' ');
+document.getElementById('title').textContent=title;document.getElementById('description').textContent=desc;document.getElementById('hashtags').textContent=hashtags;document.getElementById('tags').textContent=tags;document.getElementById('thumb').textContent=thumb;
+makeThumbnail(obj,style);
+document.getElementById('package').textContent=title+'\\n\\n'+desc+'\\n\\nTAGS\\n'+tags+'\\n\\nTHUMBNAIL PROMPT\\n'+thumb+'\\n\\n'+sceneText.map(s=>s.text).join('\\n\\n')+'\\n\\nVOICEOVER\\n'+voiceText.join(' ');
+document.getElementById('results').hidden=false;document.getElementById('status').textContent='Your complete content pack is ready.';
+}
+let thumbnailDataUrl='';
+function makeThumbnail(obj,style){
+const safe=obj.replace(/[&<>"]/g,' ').slice(0,34);
+const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b1220"/><stop offset="1" stop-color="#1e4560"/></linearGradient><linearGradient id="foam" x1="0" y1="0" x2="0.9" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#c9d5e0"/></linearGradient><filter id="shadow"><feDropShadow dx="0" dy="18" stdDeviation="18" flood-opacity=".45"/></filter></defs>
+<rect width="1280" height="720" fill="url(#bg)"/><circle cx="1030" cy="120" r="210" fill="#45d6a8" opacity=".14"/><circle cx="180" cy="650" r="250" fill="#45d6a8" opacity=".08"/>
+<text x="64" y="88" fill="#45d6a8" font-family="Arial,sans-serif" font-size="30" font-weight="700" letter-spacing="4">MINI MODEL LAB</text>
+<text x="64" y="170" fill="#fff" font-family="Arial,sans-serif" font-size="48" font-weight="800">WHITE FOAM</text><text x="64" y="226" fill="#fff" font-family="Arial,sans-serif" font-size="48" font-weight="800">MINIATURE</text>
+<g filter="url(#shadow)"><rect x="650" y="200" width="500" height="330" rx="28" fill="#e6edf3" stroke="#fff" stroke-width="8"/><rect x="700" y="250" width="400" height="230" rx="14" fill="url(#foam)"/><path d="M740 430 L900 300 L1060 430 Z" fill="#fff" stroke="#9cabb8" stroke-width="8"/><rect x="785" y="400" width="230" height="100" rx="5" fill="#fff" stroke="#9cabb8" stroke-width="7"/><rect x="860" y="430" width="70" height="70" fill="#c9d5e0" stroke="#9cabb8" stroke-width="5"/><path d="M810 430 V470 M975 430 V470 M785 450 H835 M950 450 H1000" stroke="#aab8c5" stroke-width="5"/></g>
+<text x="64" y="600" fill="#fff" font-family="Arial,sans-serif" font-size="36" font-weight="700">${safe.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').toUpperCase()}</text>
+<text x="64" y="655" fill="#45d6a8" font-family="Arial,sans-serif" font-size="26">MEASURE • CUT • BUILD</text></svg>`;
+const blob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'});const url=URL.createObjectURL(blob);
+document.getElementById('thumbnailPreview').innerHTML='<img id="thumbImg" alt="Generated thumbnail preview" style="width:100%;border-radius:12px;display:block" src="'+url+'">';
+const canvas=document.createElement('canvas');canvas.width=1280;canvas.height=720;const ctx=canvas.getContext('2d');const img=new Image();img.onload=()=>{ctx.drawImage(img,0,0,1280,720);thumbnailDataUrl=canvas.toDataURL('image/png');URL.revokeObjectURL(url);};img.src=url;
+}
+function downloadThumbnail(){if(!thumbnailDataUrl){document.getElementById('status').textContent='Please wait a moment, then tap Download Thumbnail PNG again.';return;}const a=document.createElement('a');a.href=thumbnailDataUrl;a.download='mini-model-lab-thumbnail.png';a.click();}
+function copyText(id){const el=document.getElementById(id);navigator.clipboard.writeText(el.innerText||el.textContent).then(()=>document.getElementById('status').textContent='Copied successfully.').catch(()=>document.getElementById('status').textContent='Long-press the text and copy it manually.');}
+</script></body></html>
